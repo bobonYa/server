@@ -1,12 +1,16 @@
-var http = require('http');
+var http = require("http");
+var url = require("url");
 
+function start(route, handle) {
+  function onRequest(request, response) {
+    var pathname = url.parse(request.url).pathname;
+    console.log("Request for " + pathname + " received.");
 
-http.createServer(function(req, res) {
-	console.log("Server start");
-	//res.statusCode = 200;
-	res.setHeader ('Access-Control-Allow-Origin', '*');
-	res.statusCode = 200;
-	res.end("NodeJs server create");
+    route(handle, pathname, response);
+  }
 
+  http.createServer(onRequest).listen(8888);
+  console.log("Server has started.");
+}
 
-}).listen(1400);
+exports.start = start;
